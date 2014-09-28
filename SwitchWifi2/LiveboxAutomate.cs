@@ -4,6 +4,9 @@ using System.Text.RegularExpressions;
 using System.Threading;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Firefox;
+using OpenQA.Selenium.PhantomJS;
+using SwitchWifi2;
+using System.Drawing;
 
 namespace SeleniumTests
 {
@@ -15,8 +18,13 @@ namespace SeleniumTests
 
         public LiveboxAutomate()
         {
-            Console.WriteLine("Prepare a new firefox instance");
+            Console.WriteLine("Prepare a new PhantomJS instance");
+    
+            //No Headless display for debugging purposes.
             driver = new FirefoxDriver();
+            driver.Manage().Window.Position = new Point(-2000, 0);
+
+
             baseURL = "http://livebox/";
         }
         
@@ -34,8 +42,9 @@ namespace SeleniumTests
         }
         
 
-        public void SwitchWifi()
+        public bool SwitchWifi()
         {
+            bool isWifiEnabled = false;
             Console.WriteLine("Go to the livebox admin page");
             driver.Navigate().GoToUrl(baseURL);
             StubbornFindElement(By.Id("PopupPassword")).Clear();
@@ -49,16 +58,53 @@ namespace SeleniumTests
             StubbornFindElement(By.XPath("//li[@id='hmenu-wifi']/a/span")).Click();
 
             // Wait for the controls to appear
-            if(WaitAndClickOnFirst(By.Id("bt_enable"), By.Id("bt_disable")))
+            if (WaitAndClickOnFirst(By.Id("bt_enable"), By.Id("bt_disable")).Criteria == By.Id("bt_disable"))
             {
                 WaitAndClick(By.Id("ct-msgbox-button1"));
+                isWifiEnabled = false;
+            }
+            else
+            {
+                isWifiEnabled = true;
             }
 
             CleanUp();
 
-            Console.WriteLine("Exit in 3 seconds");
-            Thread.Sleep(3000);
-           
+            return isWifiEnabled;
+        }
+
+        public bool IsWifiEnabled()
+        {
+            bool ans = false;
+
+            Console.WriteLine("Go to the livebox admin page");
+            driver.Navigate().GoToUrl(baseURL);
+            StubbornFindElement(By.Id("PopupPassword")).Clear();
+
+            Console.WriteLine("Fetch the LiveBoxAdmin env variable content");
+            string password = Environment.GetEnvironmentVariable("LiveBoxAdmin");
+
+            Console.WriteLine("Connexion");
+            StubbornFindElement(By.Id("PopupPassword")).SendKeys(password);
+            StubbornFindElement(By.Id("bt_authenticate")).Click();
+            StubbornFindElement(By.XPath("//li[@id='hmenu-wifi']/a/span")).Click();
+
+            // Wait for the controls to appear
+            if (WaitForFirstVisible(By.Id("bt_enable"), By.Id("bt_disable")).Criteria.ToString() == By.Id("bt_disable").ToString())
+            {
+                // Wifi enabled
+                Console.WriteLine("Wifi is enabled");
+                ans =  true;
+            }
+            else
+            {
+                Console.WriteLine("Wifi is not enabled");
+                ans = false;
+            }
+
+            CleanUp();
+
+            return ans;
         }
 
         /// <summary>
@@ -88,13 +134,7 @@ namespace SeleniumTests
 
         }
 
-        /// <summary>
-        /// Click on the first visible element
-        /// </summary>
-        /// <param name="criteriaEnable"></param>
-        /// <param name="criteriaDisable"></param>
-        /// <returns>true if the disable element was clicked</returns>
-        private bool WaitAndClickOnFirst(By criteriaEnable, By criteriaDisable)
+        private WebElementWithCriteria WaitForFirstVisible(By criteriaEnable, By criteriaDisable)
         {
             var controlEnable = StubbornFindElement(criteriaEnable);
             var controlDisable = StubbornFindElement(criteriaDisable);
@@ -103,26 +143,47 @@ namespace SeleniumTests
             do
             {
                 if (controlEnable.Displayed)
-                {
-                    Console.WriteLine("oOo Plug Wifi in oOo");
-                    controlEnable.Click();
-                    return false;
-                }
+                    return new WebElementWithCriteria()
+                        {
+                            Control = controlEnable,
+                            Criteria = criteriaEnable
+                        };
 
                 if (controlDisable.Displayed)
-                {
-                    Console.WriteLine("oOo Cut the Wifi oOo");
-                    controlDisable.Click();
-                    return true;
-                }
+                    return new WebElementWithCriteria()
+                    {
+                        Control = controlDisable,
+                        Criteria = criteriaDisable
+                    };
 
                 ++i;
                 Thread.Sleep(500);
             }
             while (i < 10);
 
+            throw new Exception(string.Format("could not find any of these controls: {0}and {1}", criteriaEnable.ToString(), criteriaDisable.ToString()));
+        }
+        /// <summary>
+        /// Click on the first visible element
+        /// </summary>
+        /// <param name="criteriaEnable"></param>
+        /// <param name="criteriaDisable"></param>
+        /// <returns>true if the disable element was clicked</returns>
+        private WebElementWithCriteria WaitAndClickOnFirst(By criteriaEnable, By criteriaDisable)
+        {
+            var control = WaitForFirstVisible(criteriaEnable, criteriaDisable);
 
-            throw new Exception(string.Format("could not click any of these controls: {0}and {1}", criteriaEnable.ToString(), criteriaDisable.ToString()));
+            if (control.Criteria.ToString() == criteriaEnable.ToString())
+            {
+                 Console.WriteLine("oOo Plug Wifi in oOo");
+            }
+            else
+            {
+                 Console.WriteLine("oOo Cut the Wifi oOo");
+            }
+
+            control.Control.Click();
+            return control;
         }
 
         /// <summary>
