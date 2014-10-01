@@ -1,5 +1,4 @@
-﻿using SeleniumTests;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,6 +7,8 @@ using System.Threading.Tasks;
 using System.Drawing;
 using System.Windows.Forms;
 using SwitchWifi2.Properties;
+using Microsoft.Practices.Unity;
+using Microsoft.Practices.Unity.Configuration;
 
 namespace SwitchWifi2
 {
@@ -25,14 +26,14 @@ namespace SwitchWifi2
         {
             // Create a simple tray menu with only one item.
             trayMenu = new ContextMenu();
-            trayMenu.MenuItems.Add("Exit", OnExit);
+            trayMenu.MenuItems.Add(Resources.Exit, OnExit);
            
             // Create a tray icon. In this example we use a
             // standard system icon for simplicity, but you
             // can of course use your own custom icon too.
             trayIcon      = new NotifyIcon();
-            trayIcon.Text = "Switch Wifi, loading informations";
-            trayIcon.Icon = new Icon(SystemIcons.Question, 40, 40);
+            trayIcon.Text = Resources.Loading;
+            trayIcon.Icon = Resources.LookingForWifi;
  
             // Add menu to tray icon and show it.
             trayIcon.ContextMenu = trayMenu;
@@ -45,16 +46,21 @@ namespace SwitchWifi2
             ShowInTaskbar = false; // Remove from taskbar.
  
             base.OnLoad(e);
-            HandleIcon(new LiveboxAutomate().IsWifiEnabled());
-            trayMenu.MenuItems.Add("Switch Wifi", OnSwitchWifi);
+
+            IModemAutomate myServiceInstance = UnityResolver.BuildUnityContainer().Resolve(typeof(IModemAutomate)) as IModemAutomate;
+
+            HandleIcon(myServiceInstance.IsWifiEnabled());
+            trayMenu.MenuItems.Add(Resources.Switch, OnSwitchWifi);
             trayIcon.ContextMenu = trayMenu;
         }
  
         private void OnSwitchWifi(object sender, EventArgs e)
         {
-            trayIcon.Text = "Switching Wifi... Please wait";
-            trayIcon.Icon = new Icon(SystemIcons.Question, 40, 40);
-            bool isWifiEnabled = new LiveboxAutomate().SwitchWifi();
+            trayIcon.Text = Resources.InProgress;
+            trayIcon.Icon = Resources.LookingForWifi;
+
+            IModemAutomate myServiceInstance = UnityResolver.BuildUnityContainer().Resolve(typeof(IModemAutomate)) as IModemAutomate;
+            bool isWifiEnabled = myServiceInstance.SwitchWifi();
 
             HandleIcon(isWifiEnabled);
         }
@@ -64,12 +70,12 @@ namespace SwitchWifi2
            if (isWifiEnabled)
            {
                trayIcon.Icon = Resources.Wifi;
-               trayIcon.Text = "Wifi is Enabled";
+               trayIcon.Text = Resources.WifiOn;
            }
            else
            {
                 trayIcon.Icon = Resources.NoWifi;
-                trayIcon.Text = "Wifi is Disabled";
+                trayIcon.Text = Resources.WifiOff;
            }
         }
 

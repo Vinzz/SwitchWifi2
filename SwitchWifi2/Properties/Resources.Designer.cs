@@ -61,6 +61,43 @@ namespace SwitchWifi2.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Exit.
+        /// </summary>
+        internal static string Exit {
+            get {
+                return ResourceManager.GetString("Exit", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Switching Wifi... Please wait.
+        /// </summary>
+        internal static string InProgress {
+            get {
+                return ResourceManager.GetString("InProgress", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Switch Wifi, loading informations.
+        /// </summary>
+        internal static string Loading {
+            get {
+                return ResourceManager.GetString("Loading", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Icon similar to (Icon).
+        /// </summary>
+        internal static System.Drawing.Icon LookingForWifi {
+            get {
+                object obj = ResourceManager.GetObject("LookingForWifi", resourceCulture);
+                return ((System.Drawing.Icon)(obj));
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Icon similar to (Icon).
         /// </summary>
         internal static System.Drawing.Icon NoWifi {
@@ -71,12 +108,39 @@ namespace SwitchWifi2.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Switch Wifi.
+        /// </summary>
+        internal static string Switch {
+            get {
+                return ResourceManager.GetString("Switch", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Icon similar to (Icon).
         /// </summary>
         internal static System.Drawing.Icon Wifi {
             get {
                 object obj = ResourceManager.GetObject("Wifi", resourceCulture);
                 return ((System.Drawing.Icon)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Wifi is Disabled.
+        /// </summary>
+        internal static string WifiOff {
+            get {
+                return ResourceManager.GetString("WifiOff", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Wifi is Enabled.
+        /// </summary>
+        internal static string WifiOn {
+            get {
+                return ResourceManager.GetString("WifiOn", resourceCulture);
             }
         }
     }

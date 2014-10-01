@@ -4,21 +4,20 @@ using System.Text.RegularExpressions;
 using System.Threading;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Firefox;
-using OpenQA.Selenium.PhantomJS;
 using SwitchWifi2;
 using System.Drawing;
 
-namespace SeleniumTests
+namespace SwitchWifi2
 {
   
-    public class LiveboxAutomate
+    public class LiveboxAutomate : IModemAutomate
     {
         private IWebDriver driver;
         private string baseURL;
 
         public LiveboxAutomate()
         {
-            Console.WriteLine("Prepare a new PhantomJS instance");
+            Console.WriteLine("Prepare a new Firefox instance");
     
             //No Headless display for debugging purposes.
             driver = new FirefoxDriver();
