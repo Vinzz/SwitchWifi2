@@ -42,27 +42,47 @@ namespace SwitchWifi2
  
         protected override void OnLoad(EventArgs e)
         {
-            Visible       = false; // Hide form window.
-            ShowInTaskbar = false; // Remove from taskbar.
- 
-            base.OnLoad(e);
+            try
+            {
+                Visible = false; // Hide form window.
+                ShowInTaskbar = false; // Remove from taskbar.
 
-            IModemAutomate myServiceInstance = UnityResolver.BuildUnityContainer().Resolve(typeof(IModemAutomate)) as IModemAutomate;
+                base.OnLoad(e);
 
-            HandleIcon(myServiceInstance.IsWifiEnabled());
-            trayMenu.MenuItems.Add(Resources.Switch, OnSwitchWifi);
-            trayIcon.ContextMenu = trayMenu;
+                IModemAutomate myServiceInstance = UnityResolver.BuildUnityContainer().Resolve(typeof(IModemAutomate)) as IModemAutomate;
+
+                HandleIcon(myServiceInstance.IsWifiEnabled());
+                trayMenu.MenuItems.Add(Resources.Switch, OnSwitchWifi);
+                trayIcon.ContextMenu = trayMenu;
+            }
+            catch (Exception ex)
+            {
+                ProcessExp(ex);
+            }
+        }
+
+        private static void ProcessExp(Exception ex)
+        {
+            MessageBox.Show(string.Format(Resources.Error, ex.Message));
         }
  
         private void OnSwitchWifi(object sender, EventArgs e)
         {
-            trayIcon.Text = Resources.InProgress;
-            trayIcon.Icon = Resources.LookingForWifi;
+            try
+            {
+                trayIcon.Text = Resources.InProgress;
+                trayIcon.Icon = Resources.LookingForWifi;
 
-            IModemAutomate myServiceInstance = UnityResolver.BuildUnityContainer().Resolve(typeof(IModemAutomate)) as IModemAutomate;
-            bool isWifiEnabled = myServiceInstance.SwitchWifi();
+                IModemAutomate myServiceInstance = UnityResolver.BuildUnityContainer().Resolve(typeof(IModemAutomate)) as IModemAutomate;
+                bool isWifiEnabled = myServiceInstance.SwitchWifi();
 
-            HandleIcon(isWifiEnabled);
+                HandleIcon(isWifiEnabled);
+            }
+            catch (Exception ex)
+            {
+
+                ProcessExp(ex);
+            }
         }
 
         private void HandleIcon(bool isWifiEnabled)

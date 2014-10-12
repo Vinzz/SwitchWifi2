@@ -61,6 +61,15 @@ namespace SwitchWifi2.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to An error occured.\nPlease retry later\n{0}.
+        /// </summary>
+        internal static string Error {
+            get {
+                return ResourceManager.GetString("Error", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Exit.
         /// </summary>
         internal static string Exit {
