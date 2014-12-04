@@ -21,6 +21,8 @@ namespace SwitchWifi2
 
         private NotifyIcon  trayIcon;
         private ContextMenu trayMenu;
+        private System.Timers.Timer timer;
+
 
         public SwitchWifi()
         {
@@ -38,8 +40,18 @@ namespace SwitchWifi2
             // Add menu to tray icon and show it.
             trayIcon.ContextMenu = trayMenu;
             trayIcon.Visible     = true;
+
+            // Check every 5 minutes, in case wifi state was changed from elsewhere
+            timer = new System.Timers.Timer(300000);
+            timer.Elapsed += timer_Elapsed;
+            timer.Enabled = true;
         }
- 
+
+        void timer_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
+        {
+            CheckWifiState();
+        }
+
         protected override void OnLoad(EventArgs e)
         {
             try
@@ -49,16 +61,24 @@ namespace SwitchWifi2
 
                 base.OnLoad(e);
 
-                IModemAutomate myServiceInstance = UnityResolver.BuildUnityContainer().Resolve(typeof(IModemAutomate)) as IModemAutomate;
-
-                HandleIcon(myServiceInstance.IsWifiEnabled());
+                CheckWifiState();
                 trayMenu.MenuItems.Add(Resources.Switch, OnSwitchWifi);
                 trayIcon.ContextMenu = trayMenu;
+
+                // Switch on double click
+                trayIcon.DoubleClick += OnSwitchWifi;
             }
             catch (Exception ex)
             {
                 ProcessExp(ex);
             }
+        }
+
+        private void CheckWifiState()
+        {
+            IModemAutomate myServiceInstance = UnityResolver.BuildUnityContainer().Resolve(typeof(IModemAutomate)) as IModemAutomate;
+
+            HandleIcon(myServiceInstance.IsWifiEnabled());
         }
 
         private static void ProcessExp(Exception ex)
