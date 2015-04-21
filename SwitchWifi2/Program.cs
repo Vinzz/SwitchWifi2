@@ -63,8 +63,8 @@ namespace SwitchWifi2
 
                 base.OnLoad(e);
 
-                CheckWifiState();
                 trayMenu.MenuItems.Add(Resources.Switch, OnSwitchWifi);
+                trayMenu.MenuItems.Add(Resources.Check, OnCheckWifi);
                 trayIcon.ContextMenu = trayMenu;
 
                 // Switch on double click
@@ -74,6 +74,11 @@ namespace SwitchWifi2
             {
                 ProcessExp(ex);
             }
+        }
+
+        private void OnCheckWifi(object sender, EventArgs e)
+        {
+            CheckWifiState();
         }
 
         private void CheckWifiState()

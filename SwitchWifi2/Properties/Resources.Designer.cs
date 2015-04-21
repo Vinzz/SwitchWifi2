@@ -61,6 +61,15 @@ namespace SwitchWifi2.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Check Wifi State.
+        /// </summary>
+        internal static string Check {
+            get {
+                return ResourceManager.GetString("Check", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to An error occured.\nPlease retry later\n{0}.
         /// </summary>
         internal static string Error {
