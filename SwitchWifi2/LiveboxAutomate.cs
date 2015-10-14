@@ -59,7 +59,6 @@ namespace SwitchWifi2
             // Wait for the controls to appear
             if (WaitAndClickOnFirst(By.Id("bt_enable"), By.Id("bt_disable")).Criteria == By.Id("bt_disable"))
             {
-                WaitAndClick(By.Id("ct-msgbox-button1"));
                 isWifiEnabled = false;
             }
             else
@@ -160,7 +159,7 @@ namespace SwitchWifi2
             }
             while (i < 10);
 
-            throw new Exception(string.Format("could not find any of these controls: {0}and {1}", criteriaEnable.ToString(), criteriaDisable.ToString()));
+            throw new Exception(string.Format("could not find any of these controls: {0} and {1}", criteriaEnable.ToString(), criteriaDisable.ToString()));
         }
         /// <summary>
         /// Click on the first visible element
