@@ -121,7 +121,9 @@
     <value>Check Wifi State</value>
   </data>
   <data name="Error" xml:space="preserve">
-    <value>An error occured.\nPlease retry later\n{0}</value>
+    <value>An error occured.
+Please retry later
+{0}</value>
   </data>
   <data name="Exit" xml:space="preserve">
     <value>Exit</value>

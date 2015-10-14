@@ -121,7 +121,9 @@
     <value>Vérification Wifi</value>
   </data>
   <data name="Error" xml:space="preserve">
-    <value>Une erreur est survenue.\nVeuillez réessayer plus tard.\n{0}</value>
+    <value>Une erreur est survenue.
+Veuillez réessayer plus tard.
+{0}</value>
   </data>
   <data name="Exit" xml:space="preserve">
     <value>Quitter</value>
