@@ -83,9 +83,16 @@ namespace SwitchWifi2
 
         private void CheckWifiState()
         {
-            IModemAutomate myServiceInstance = UnityResolver.BuildUnityContainer().Resolve(typeof(IModemAutomate)) as IModemAutomate;
+             try
+            {
+                IModemAutomate myServiceInstance = UnityResolver.BuildUnityContainer().Resolve(typeof(IModemAutomate)) as IModemAutomate;
 
-            HandleIcon(myServiceInstance.IsWifiEnabled());
+                HandleIcon(myServiceInstance.IsWifiEnabled());
+            }
+             catch (Exception ex)
+             {
+                 ProcessExp(ex);
+             }
         }
 
         private static void ProcessExp(Exception ex)
