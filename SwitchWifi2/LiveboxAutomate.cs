@@ -3,7 +3,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
 using OpenQA.Selenium;
-using OpenQA.Selenium.Firefox;
+using OpenQA.Selenium.PhantomJS;
 using SwitchWifi2;
 using System.Drawing;
 
@@ -17,10 +17,12 @@ namespace SwitchWifi2
 
         public LiveboxAutomate()
         {
-            Console.WriteLine("Prepare a new Firefox instance");
-    
-            //No Headless display for debugging purposes.
-            driver = new FirefoxDriver();
+            Console.WriteLine("Prepare a new browser instance");
+
+            var driverService = PhantomJSDriverService.CreateDefaultService();
+            driverService.HideCommandPromptWindow = true;
+            driver = new PhantomJSDriver(driverService);
+
             driver.Manage().Window.Position = new Point(-2000, 0);
 
 
