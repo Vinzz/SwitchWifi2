@@ -42,9 +42,9 @@ namespace SwitchWifi2
             trayIcon.Visible     = true;
 
             // Check every 60 minutes, in case wifi state was changed from elsewhere
-            //timer = new System.Timers.Timer(3600 * 1000);
-            //timer.Elapsed += timer_Elapsed;
-            //timer.Enabled = true;
+            timer = new System.Timers.Timer(3600 * 1000);
+            timer.Elapsed += timer_Elapsed;
+            timer.Enabled = true;
 
             CheckWifiState();
         }
